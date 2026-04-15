@@ -172,7 +172,8 @@ priority=100,tcp,nw_src=10.0.0.1,nw_dst=10.0.0.3,tp_dst=80 actions=drop
 | # | Source IP | Destination IP | Protocol | Port | Action |
 |---|-----------|---------------|----------|------|--------|
 | 1 | 10.0.0.1 | 10.0.0.3 | TCP | 80 | DROP |
-| 2 | any | any | TCP | 23 | DROP |
+| 2 | any | any | TCP | 23 | DROP | 
+| 3 | any | any | TCP | 22 | DROP |
 | * | any | any | any | any | ALLOW |
 
 Rules are defined in `firewall.py` inside `self.blocked_rules` and can be extended without touching any other part of the code.
