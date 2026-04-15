@@ -209,7 +209,7 @@ Higher priority always wins.
 
 > Run `ryu-manager firewall.py --verbose` in Terminal 1. You should see the FirewallApp loading and the controller listening on port 6653.
 
-![Ryu controller starting up and loading the firewall application](screenshots/01_controller_start.png)
+![Ryu controller starting up and loading the firewall application](1.png)
 
 ---
 
@@ -217,7 +217,7 @@ Higher priority always wins.
 
 > Run `sudo python3 topology.py` in Terminal 2. Hosts h1–h4 and switches s1–s2 are created and the switches connect to the Ryu controller via OpenFlow.
 
-![Mininet topology starting with hosts and switches being created](screenshots/02_mininet_start.png)
+![Mininet topology starting with hosts and switches being created](2.png)
 
 ---
 
@@ -225,7 +225,7 @@ Higher priority always wins.
 
 > Run `h1 ping h3 -c 3` inside the Mininet CLI. ICMP is not in the blocklist so all 3 packets succeed. This shows the firewall only blocks what it's told to — not all traffic.
 
-![h1 successfully pinging h3 with 0% packet loss](screenshots/03_ping_allowed.png)
+![h1 successfully pinging h3 with 0% packet loss](3.png)
 
 ---
 
@@ -233,7 +233,7 @@ Higher priority always wins.
 
 > Run `h1 wget -qO- http://10.0.0.3` inside the Mininet CLI. TCP port 80 from h1 to h3 matches Rule #1 and is dropped. The controller terminal should simultaneously print `BLOCKED: 10.0.0.1 -> 10.0.0.3 tcp:80`.
 
-![h1 wget to h3 failing with a connection error while the controller logs the block](screenshots/04_http_blocked.png)
+![h1 wget to h3 failing with a connection error while the controller logs the block](4.png)
 
 ---
 
@@ -241,7 +241,7 @@ Higher priority always wins.
 
 > Run `sh ovs-ofctl dump-flows s1 -O OpenFlow13` inside the Mininet CLI. This is the most important screenshot — it proves the controller programmed the switch with a real drop rule at priority 100. The switch now enforces the firewall at line speed without the controller.
 
-![ovs-ofctl dump-flows output showing the drop rule with actions=drop for TCP port 80](screenshots/05_flow_table.png)
+![ovs-ofctl dump-flows output showing the drop rule with actions=drop for TCP port 80](5.png)
 
 ---
 
