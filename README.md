@@ -205,15 +205,43 @@ Higher priority always wins.
 
 ## Screenshots
 
-See the `screenshots/` folder. A description of each screenshot is in `screenshots.txt`.
+### 1. Controller startup
 
-| File | What it shows |
-|------|--------------|
-| `01_controller_start.png` | Ryu controller starting up in Terminal 1 |
-| `02_mininet_start.png` | Mininet topology launching, hosts and switches created |
-| `03_ping_allowed.png` | `h1 ping h3` succeeding — ICMP is not blocked |
-| `04_http_blocked.png` | `h1 wget http://10.0.0.3` failing — TCP 80 is blocked |
-| `05_flow_table.png` | `ovs-ofctl dump-flows s1` showing the drop rule installed |
+> Run `ryu-manager firewall.py --verbose` in Terminal 1. You should see the FirewallApp loading and the controller listening on port 6653.
+
+![Ryu controller starting up and loading the firewall application](screenshots/01_controller_start.png)
+
+---
+
+### 2. Mininet topology launch
+
+> Run `sudo python3 topology.py` in Terminal 2. Hosts h1–h4 and switches s1–s2 are created and the switches connect to the Ryu controller via OpenFlow.
+
+![Mininet topology starting with hosts and switches being created](screenshots/02_mininet_start.png)
+
+---
+
+### 3. Ping allowed — ICMP passes through
+
+> Run `h1 ping h3 -c 3` inside the Mininet CLI. ICMP is not in the blocklist so all 3 packets succeed. This shows the firewall only blocks what it's told to — not all traffic.
+
+![h1 successfully pinging h3 with 0% packet loss](screenshots/03_ping_allowed.png)
+
+---
+
+### 4. HTTP blocked — firewall in action
+
+> Run `h1 wget -qO- http://10.0.0.3` inside the Mininet CLI. TCP port 80 from h1 to h3 matches Rule #1 and is dropped. The controller terminal should simultaneously print `BLOCKED: 10.0.0.1 -> 10.0.0.3 tcp:80`.
+
+![h1 wget to h3 failing with a connection error while the controller logs the block](screenshots/04_http_blocked.png)
+
+---
+
+### 5. Flow table — drop rule installed in the switch
+
+> Run `sh ovs-ofctl dump-flows s1 -O OpenFlow13` inside the Mininet CLI. This is the most important screenshot — it proves the controller programmed the switch with a real drop rule at priority 100. The switch now enforces the firewall at line speed without the controller.
+
+![ovs-ofctl dump-flows output showing the drop rule with actions=drop for TCP port 80](screenshots/05_flow_table.png)
 
 ---
 
